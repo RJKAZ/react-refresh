@@ -133,3 +133,80 @@ or you could just use empty brackets.
 but for our purposes, its easier to just use div.
 
 Also, you could technically refactor and use regular vanillia Javascript, but its just easier to use JSX.
+
+Section 3 - start 
+
+Now we begin creating the navbar component
+
+1. In the SRC folder, create a folder called Components
+2. Within that folder, create another folder called layout
+3. Inside the layout folder, we will create the navbar component
+4. Typically for React components, its expected to write them starting uppercase. 
+     - Navbar.js
+5. Since we have the react extension installed, we can create easy broiler plate react code for component pages. Since this project is made "Class Based" we shall use ' rce ' on the blank js page and hit tab. It will base the file on the files name (Navbar) and then exports it at the end. Just for now, make a simple H1 tag saying Navbar 
+6. Now we have made the Navbar Component, we need to import it into the main App.js file at the top with the rest of the imports 
+7. Now that we imported it, we have to insert it. so remove the h1 tag and just replace it with <Navbar />
+8. Now the page should say Navbar, which is what we have in the H1 tag in the Navbar component 
+9. Now back to the Navbar.js file, we will change that <div> to a <nav> and we'll add some classes. 
+10. We add the classes navbar and bg-primary which are defined in the pre-done CSS. 
+11. Now we want to add a Font Awesome icon, so get the link tag from google (cdnjs)
+12. Insert the link tag in the index.html and put it right above the title tag. This will allow us to use Icons throught the project
+13. Back to the Navbar.js file and iinside the h1 tag we will add a github icon
+     <i className="fab fa-github"></i>
+14. Now it has the Github icon right next to the text of Navbar, however we want to add Props to this 
+15. Props are properties you can pass into an component from outside it
+16. So in the App.js file, we will pass in a prop called title
+    <Navbar title="Github Finder" />
+17. Now to use the prop, we have to inset it using curley brackets. So in that h1 tag right after   the icon tag, add {this.props.title}
+18. We shall also use a prop for the Icon, in pretty much the same way we did title
+19. So in App JS, add to the Navbar component icon='fab fa-github'
+20. And then in the Navbar component {this.props.icon}
+21. But if you don't pass the props in you get nothing, so there is a way to define default static props 
+22. In the Navbar component, add above the render() method 
+ static defaultProps = {
+    title: 'Github Finder', 
+    icon: 'fab fa-github'
+  };
+23. This makes those props by default, so if we don't pass them in to the App.js file, they will still render. But if you do pass a different value into the App.js, it will override the default 
+24. Now we want to add in prop types and there is a quick way of doing this. In the Navbar.js file
+    up in the imports, type ' impt ' and it will autocomplete into this
+    import PropTypes from 'prop-types'
+25. Now to declare them, below the static default props, add 
+    
+  static propTypes = {
+    title: PropTypes.string.isRequired,
+    icon: PropTypes.string.isRequired 
+  };
+26. With this in place, its telling the page to expect a string. So if we try to manually pass in a number value, it will still work, but we will get an error warning in the console.log that it expected a string
+27. In that static prop types, if we pass in an Array instead of a string, it will work without error
+
+- Break to talk about State - 
+
+Component Level State means that your state is contained inside a single component  
+so we will add a useritem component and add some state to it. 
+
+28. So lets make a new Component, go into the components folder and make a new folder called users.
+29. in that users folder, make a file called UserItem.js
+30. In that UserItem.js file, add generate a class based component with rce, and in the main div just add a default text of UserItem 
+31. Now lets bring it into the App.js file by importing it and then adding it below the navbar
+32. Save and this should render the text of UserItem underneath the Navbar
+
+And now we want to add State and there are a few ways we can do that with a class based component 
+One way to do that is by using a constructor function, but thats not recommended. But for this purpose we shall do so
+
+33. In the UserItem.js, in the class App, but above the render() method, add 
+ constructor() {
+    super();
+    this.state = {
+      id: 'id',
+      login: 'mojombo',
+      avatar_url: 'https://avatars0.githubusercontent.com/u/1?v=4',
+      html_url: 'https://github/com/mojombo'
+    }
+  }
+
+34. Eventually we will be passing this data in from Githubs APIs, but for now, lets just use some dummy/random data just to populate the page. 
+35. So all that data is now defined in our state. 
+// left off at 4:22
+
+
