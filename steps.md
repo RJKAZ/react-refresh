@@ -220,6 +220,7 @@ so the code at this point should look like this
 
 render() {
 return (
+
 <div className='card text-center'>
 <img
 src={this.state.avatar_url}
@@ -324,6 +325,7 @@ so the render should at this point look like this
 
 render() {
 return (
+
 <div>
 {this.state.users.map((user) => (
 <div>{user.login}</div>
@@ -343,6 +345,7 @@ we save and now it will render just the user names from the dummy data, so in my
 it should look like this.
 
 return (
+
 <div>
 {this.state.users.map((user) => (
 <div key={user.id}>{user.login}</div>
@@ -363,6 +366,7 @@ save and the error should be gone.
 
 render() {
 return (
+
 <div>
 {this.state.users.map((user) => (
 <UserItem key={user.id} user={user} />
@@ -398,6 +402,7 @@ it should look like this
 
 render() {
 return (
+
 <div style={userStyle}>
 {this.state.users.map((user) => (
 <UserItem key={user.id} user={user} />
@@ -424,6 +429,7 @@ the code should look like this
 class App extends Component {
 render() {
 return (
+
 <div className='App'>
 <Navbar />
 <div className='container'>
@@ -440,4 +446,240 @@ and save and refresh and it should show a slight change to the appearance.
 
 - Also at this point, our Navbar component also doesn't have any State. So there is really no reason for these components to be classes. So now we will convert both the UserItem.js Component and the NavBar Component into Object based Components.
 
-- So no lets convert some class based components to functonal components.
+- So now lets convert some class based components to functonal components.
+
+66. Lets start with the UserItem.js Component first
+
+this is how it starts
+
+export class UserItem extends Component
+
+now to make it a function (with an arrow function)
+
+const UserItem = () => {
+
+67. Now since its a function we don't need render() anymore, so get rid of the render() and its corresponding curly brackets
+
+68. Also we can get rid of the import of {Component} at the top import, so get rid of that too
+
+69. Now as is, this code won't work, because since we're not using class anymore, we can't use the "this" keyword. We now have to pass the props into the function instead
+
+70. Then get rid of this...so 'this.props.user' will know become 'props.user'
+
+so this is the now changed code for the UserItem.js component
+
+---
+
+import React from 'react';
+
+const UserItem = (props) => {
+const { login, avatar_url, html_url } = props.user;
+
+return (
+<div className='card text-center'>
+<img
+src={avatar_url}
+alt=''
+className='round-img'
+style={{ width: '60px' }}
+/>
+<h3>{login}</h3>
+<div>
+<a href={html_url} className='btn btn-dark btn-sm my-1'>
+More
+</a>
+</div>
+</div>
+);
+};
+
+export default UserItem;
+
+---
+
+Now we shall do the same to the Navbar - this will be a bit more difficult because we have static default props and proptypes which are inside the class component.
+
+71. So to begin, lets change it to an arrow function and pass in the props
+
+const Navbar = (props) => {
+
+72. So for now, cut out the static defaultProps and propTypes, and move then to the bottom outside of the function.
+
+73. Now instead of calling them static, we will name them after Navbar instead
+
+so 'static defaultProps = {' will now become 'Navbar.defaultProps = {'
+
+74. And then do the same for proptypes. Navbar.propTypes
+
+75. Get rid of render() and its corresponding curly bracket.
+
+76. Get rid of the parantheses around the passed in props up by the arrow function
+
+77. Get rid of the 'this' keyword (which is used twice here)
+
+78. Get rid of the imported {component} at the top import
+
+79. Save, refresh if needed, and the code still works.
+
+- Now lets jump back to the UserItem.js component for we will refactor things a bit more
+
+const UserItem = (props) => {
+const { login, avatar_url, html_url } = props.user;
+
+we can destructure the props directly into the arrow function instead of having to declare them sepretly. But since it will be destructed, you need to add an extra curly braces.
+
+const UserItem = ({ user: { login, avatar_url, html_url }}) => {
+
+79. Now lets do the same to our navbar.
+
+const Navbar = ({ icon, title }) => {
+return (
+<nav className='navbar bg-primary'>
+<h1>
+<i className={icon} /> {title}
+</h1>
+</nav>
+);
+};
+
+80. So now both the Navbar and the UserItem components are no functional components.
+
+81. Now in UserItem, we are passing in the user prop so we should import proptypes into the component.
+
+import PropTypes from 'prop-types';
+
+82. Then down at the bottom below the function, we have to add to the bottom
+
+UserItem.propTypes = {
+
+}
+
+83. Also the user prop type we are passing in is an object. so add in ptor which adds a broiler plate, it should look like this
+
+UserItem.propTypes = {
+user: PropTypes.object.isRequired,
+}
+
+84. Save and refresh, and the code is fine.
+
+---
+
+Now we will do some new things. In our User.js Component, we have the user data hard coded in at this point. We want to refactor this so that the State will be in the App.js file instead.
+
+85. So in the App.js file, lets add a lifecycle method
+
+86. In the class component, above the render, add
+    componentDidMount() {
+    console.log(123);
+    }
+
+what this will do, is as soon as the app is loaded, that console.log will fire off.
+
+this is important because when we make an HTTP request...like to github, this is where we would want to do it.
+
+And this is what we will do, but with Axios
+
+87. So in the project folder, install axios via npm in your terminal.
+    npm i axios
+
+88. restart your dev server
+
+89. Now we have to import Axios into the App.js
+
+import axios from 'axios';
+
+90. Now we want to make a get request to the github api
+
+so in to the componentDidMount() method, remove that console.log and instead add in
+
+axios.get('https://api.github.com/users');
+
+- Now axios deals with promises, so we'll add a .then, then in there get a response so now we will console.log(res.data)
+
+  componentDidMount() {
+  axios.get('https://api.github.com/users').then(res => console.log(res.data));
+  }
+
+91. This should give us the data, so save/refresh, and console.log and you should see the data in the console. And yep, this should pull up the 30 users.
+
+92. Now add an async to our component did mount and create a variable for the response, where we will await the request.
+
+93. With that we can also get rid of the .then, and then add a new console.log statement to verify this works
+
+class App extends Component {
+async componentDidMount() {
+const res = await axios.get('https://api.github.com/users');
+
+    console.log(res.data);
+
+}
+
+94. Save, and refresh, and the code still works fine.
+
+95. Now, we want to put the user data that comes back (res.data) into our State of our app component, which we technically don't have yet.
+
+96. So lets add this to our code.
+
+state = {
+users: [],
+loading: false
+}
+
+-- we set loading to false, because there will be a moment in time before we get the data back, so while its fetching, we want loading to be true, and when we get the data, we want loading to be false.
+
+like saying, if this data isn't loaded, show us a spinner
+
+now state can't be directly changed. I can't just write
+
+this.state.loading = true
+
+That is not how you do it in React, with Class based components we have to use this.setState
+
+this.setState();
+
+and then in there we can pass in the object with the part of the state we want to change, which is loading, and then we want to change it to true.
+
+async componentDidMount() {
+this.setState({ loading: true });
+
+so now when the component runs, it will change the state to true.
+
+and then after we make the request, and get the response, we then want to reset the state.
+
+In resetting the State, we want to set two things
+
+we're gonna take users and set it to our res.data, and then set the loading back to false.
+
+React dev tools should confirm this all works up to now
+
+97. So now that we have those users in State, we want to pass those down into our Users.js component thru props
+
+98. So in the app render(), in <Users /> lets pass in two things
+
+<Users loading={this.state.loading} users={this.state.users} />
+
+- side note, if I'm not getting data back, I might have exhausted my requests from the API, you typically only get like 50 or so requests per hour, unless you get an API key
+
+99. But anyway, now we have out Users component that is getting the passed in State of loading and the user data from the passed in Props
+
+100. Save and lets go to Users.js
+
+101. We no longer need to hardcoded data in the state so we can get rid of it. So just delete the whole State.
+
+102. And then in the render method, we need to change the this.state to this.props
+
+103. So in the app.js the cass component should look like this.
+
+class Users extends Component {
+render() {
+return (
+<div style={userStyle}>
+{this.props.users.map((user) => (
+<UserItem key={user.id} user={user} />
+))}
+</div>
+);
+}
+}
+
+104. Save and refresh and you should get the 30 users rendered.
