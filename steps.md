@@ -476,6 +476,7 @@ const UserItem = (props) => {
 const { login, avatar_url, html_url } = props.user;
 
 return (
+
 <div className='card text-center'>
 <img
 src={avatar_url}
@@ -534,6 +535,7 @@ const UserItem = ({ user: { login, avatar_url, html_url }}) => {
 
 const Navbar = ({ icon, title }) => {
 return (
+
 <nav className='navbar bg-primary'>
 <h1>
 <i className={icon} /> {title}
@@ -673,6 +675,7 @@ React dev tools should confirm this all works up to now
 class Users extends Component {
 render() {
 return (
+
 <div style={userStyle}>
 {this.props.users.map((user) => (
 <UserItem key={user.id} user={user} />
@@ -683,3 +686,150 @@ return (
 }
 
 104. Save and refresh and you should get the 30 users rendered.
+
+-- Now lets create a spinner component and add api keys for github
+
+105. the spinner gif will be provided by the course lecturer, move or copy the spinner.gif in the layout folder
+
+106. Now we'll make a new component in layout called Spinner.js
+
+107. It will be a functional (arrow function) component, for the broiler plate for this, type in racf, and it will create an arrow function for us.
+
+108. Because of webpack, we can import images, so at the top lets import the spinner.gif
+
+109. We will do this as a fragment, so be sure to add { Fragment } to the top react import
+
+110. Change the <div> to <Fragment>, and inside the fragment lets put an image with the source of spinner. define the alt as "Loading..."
+
+111. Lets also add a little bit of styling, so lets inline style (again, double curly braces). A width of 200 pixels, a margin of auto (so its in the middle) and display of block
+
+the code should look like this.
+
+<Fragment>
+    <img src={spinner} alt="Loading..." style={{ width: '200px', margin: 'auto', display: 'block' }}/>
+</Fragment>
+
+- one thing with arrow functions, if we don't have any other Javascript going on and its just the return, we can get rid of it. In fact you can just return the frament directly from the arrow function
+
+export const Spinner = () => {
+<Fragment>
+<img src={spinner} alt="Loading..." style={{ width: '200px', margin: 'auto', display: 'block' }}/>
+</Fragment>
+}
+
+- no that we have the spinner component, lets go into Users.js
+- remember the Users component got passed in 'loading' and 'users' as props.
+
+112. Since this Users.js component now has no state, we can turn this into a functonal component, so lets refactor the class into a function
+
+113. now instead of just passing in props to the arrow function, we will destructure and pass in users and loading. And with that done, you can remove this.props and just leave it as usersmap. Also get rid of the render and its matching bracket.
+
+the code should look like this
+
+const Users = ({ users, loading }) => {
+return (
+<div style={userStyle}>
+{users.map((user) => (
+<UserItem key={user.id} user={user} />
+))}
+</div>
+);
+};
+
+114. in this Users.js component, import in the spinner
+
+115. and now lets add an if statement above the return, to say that if the app is loading, to return the spinner else its just returning all the users. You also have to copy and paste the return into the if/else statement. The code should look like this.
+
+const Users = ({ users, loading }) => {
+if (loading) {
+return <Spinner />;
+} else {
+return (
+<div style={userStyle}>
+{users.map((user) => (
+<UserItem key={user.id} user={user} />
+))}
+</div>
+);
+}
+};
+
+- not to self, when doing the Spinner.js component, the broiler plate adds and export to the top and doesn't have the export default Spinner at the bottom. It needs that to import the spinner.
+
+- also at this point, I think I timed out the API.
+
+116. Now lets add our prop types, so import them in at the top, and then below the return likes bring it in, and define the prop types for the users as an Array, and the prop type for loading as a bool (boolan)
+
+it should look like this
+
+Users.propTypes = {
+users: PropTypes.array.isRequired,
+loading: PropTypes.bool.isRequired
+}
+
+- now lets get that Github API Key
+
+- so we need to register our project with github
+
+https://github.com/settings/applications/new
+
+the homepage and callback url you can just use localhost:3000/ for
+
+And just pic a name and give it a description if you want to.
+
+this gives me a client id and a client secret
+
+we will put these in enviroment variables
+
+so in the root directory of the application, lets create a .env.local file
+
+So when we deploy this project to netlify eventually, we want to send the .env file to them, but for public directories you typically don't want to do that.
+
+So thankfully with npx create-react-app, the gitignore by default includes .env.local so we don't have to worry about these values hitting our github or public repo.
+
+In the .env.local file, but this in
+
+REACT_APP_GITHUB_CLIENT_ID=''
+REACT_APP_GITHUB_CLIENT_SECRET=''
+
+but populate with my client ID and secret
+
+- in Users.js, remove the {Component} from the import
+
+so now lets go into the App.js, and we have to add these enviroment variables into our get request
+
+its kind of...complicated so here's the code (note that we had to use backticks)
+
+const res = await axios.get(`https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+
+So weird error I just encountered. I was getting an error of
+
+Error: Spinner(...): Nothing was returned from render. This usually means a return statement is missing. Or, to render nothing, return null.
+
+to fix this, I had to change a pair of curly brackets into parantheses
+
+in the Spinner.js component, I had
+
+const Spinner = () => {
+<Fragment>
+<img
+src={spinner}
+alt='Loading...'
+style={{ width: '200px', margin: 'auto', display: 'block' }}
+/>
+</Fragment>
+};
+
+to make the code work, I had to change { to (
+
+const Spinner = () => (
+<Fragment>
+<img
+src={spinner}
+alt='Loading...'
+style={{ width: '200px', margin: 'auto', display: 'block' }}
+/>
+</Fragment>
+);
+
+and it works fine now...not sure why I had to do that at all, but whatever.
