@@ -898,5 +898,177 @@ but since we only have one expression, we can get rid of the curly braces
     console.log(this.state.text);
   };
 
+- so now we want to be able to search for users based upon what we enter in our search form. With the github API we can make a request to the end point of GET /search/users, and then we can add a parameter of Q which is a query string we want to search for. 
+
+- Now we want this to be in the main app component, 
+
+- So the (this.state.text) value in the Search.js component, we have to pass that up to the main app component thru Props
+
+126. So lets rewrite that onSubmit in the Search.js component 
+
+  onSubmit = (e) => {
+    e.preventDefault();
+    console.log(this.state.text);
+  };
+
+  we will rewrite it as 
+
+   onSubmit = (e) => {
+    e.preventDefault();
+    this.props.searchUsers(this.state.text);
+  };
+
+  and then we also want to add into it this.setState(); to clear the form by setting the local component text to nothing
+
+    onSubmit = (e) => {
+    e.preventDefault();
+    this.props.searchUsers(this.state.text);
+    this.setState({text: ''});
+  };
+
+  - however the props.searchUsers doesn't actually exist at this point, but since we are calling it as props.searchUsers, we can call it as a prop in the App.js where we inputed the search component. 
+
+  so instead of sending a prop down, we are sending a prop up
+
+  127. So open up the App.js and lets make some changes. So we are going to give Search the prop of searchUsers and then set it to a method of the this component, this.searchUsers
+
+<Search />
+
+- becomes 
+
+<Search searchUsers={this.searchUsers} />
+
+128. And now we have to create the searchUsers function above the render, and this searchUsers function should take in text since we passed in (this.state.text) on the onsubmit 
+
+searchUsers = (text) => {
+    
+  }
+
+  and lets add a console log to make sure it works
+
+  and it does!
+
+  So to reiterate, once we submit this form in the Search.js Component, its calling onsubmit, and we're calling a function in the props called searchUsers and passing in the text. 
+
+  In our App.js, we set the props to call this.searchUsers in the app.js
+
+  Now we want to make a call to that endpoint SEARCH/Users, so we will use Async/Await
+
+  129. So lets add Async to the searchUsers arrow function in the app.js
+
+  130. And copy our get request from above and paste in inside the searchUsers component. Now the endpoint with this one will be different so we have to change that. 
+
+    searchUsers = async text => {
+    const res = await axios.get(
+      `https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+
+    this.setState({ users: res.data, loading: false });
+  }
+
+131. We have to make one more change, this endpoint won't return res.data  it returns res.data.items
+
+ this.setState({ users: res.data.items, loading: false });
+
+ - So now that we're doing this, there is no reason to fetch the original users. So comment that code out (don't delete it yet)
+
+ So save and refresh your page and the pade still works, but those default users are gone. 
+
+ Now it will only display what is search, so search for any name and it will work
+
+131. One final part, add loading to true in the searchUsers function 
+
+this.setState({ loading: true }); 
+
+- this will give us the spinner 
+ 
+132. We should also add searchUsers as a proptype in the Search.js component 
+
+import PropTypes from 'prop-types';
+
+and in the Search component itself, add in this below the state. 
+
+ static propTypes = {
+    searchUsers: PropTypes.func.isRequired
+  };
 
 
+- So now the app itself works, but we have a few things we need to do still, like adding a clear button 
+
+133. So in Search.js, lets go underneath the form and add a button and give it a few classnames, set it to say Clear, and add an onClick to call a prop method we're gonna call clear users
+
+
+<button className="btn btn-light btn-block" onClick={this.props.clearUsers}>Clear</button>
+
+134. Now since its a prop lets add it to our prop types above
+
+ static propTypes = {
+    searchUsers: PropTypes.func.isRequired,
+    clearUsers: PropTypes.func.isRequired
+  };
+
+- now remember, when we're calling {this.props.clearUsers}, we're sending it up, so we have to catch it on our App.js where we have the SearchComponent imbedded. 
+
+135. So in the App.js, we need to add this to the search component 
+
+<Search searchUsers={this.searchUsers} clearUsers={this.clearUsers}/>
+
+136. And then we need to add the clearUsers function to clear out the state. So we do an arrow function that sets the state to users as an empty array, and loading to false. 
+
+- save and refresh and it should work, however we only want the clear button to show if we have a search already. 
+
+- there are a few ways we can do this, but we'll do so as a prop
+
+137. So in App.js, where we placed the Search Component, we'll add in showClear and set it to an expression 
+
+so if this.state.users.length is greater then 0, lets pass in true for this prop. else, lets pass in false. 
+
+  <Search searchUsers={this.searchUsers} clearUsers={this.clearUsers} showClear={this.state.users.length > 0 ? true: false }/>
+
+
+138. so now we're passing in showClear as a prop, so we also want to define it up in proptypes in the Search.js component (note, it is a boolean)
+
+showClear: PropTypes.bool.isRequired
+
+139. And then we want to wrap our button in an expression that says it this.props.showClear is true, then we want to show the button
+
+  {this.props.showClear && (
+        <button className="btn btn-light btn-block" onClick={this.props.clearUsers}>Clear</button>
+        )}
+
+- so it all works fine, but we're going to destructure some more of the code 
+
+140. So lets add this below the render() but above the return in the Search.js Component 
+
+const { showClear, clearUsers } = this.props; 
+
+with that we can remove the this.props from showClear and clearUsers
+
+{showClear && (
+        <button className="btn btn-light btn-block" onClick={clearUsers}>Clear</button>
+        )}
+
+- and now we cna do a little more destructuring in app.js becasue we call this.state quite a few times
+
+
+141. In App.js, below render and above return, put this
+
+const { users, loading } = this.state;
+
+and then we can cut out this.state from the code in the return 
+
+render() {
+    const { users, loading } = this.state;
+    return (
+      <div className='App'>
+        <Navbar />
+        <div className='container'>
+          <Search searchUsers={this.searchUsers} clearUsers={this.clearUsers} showClear={users.length > 0 ? true: false }/>
+          <Users loading={loading} users={users} />
+        </div>
+      </div>
+    );
+  }
+}
+
+- Now lets work on setting up some alerts. 
