@@ -833,3 +833,70 @@ style={{ width: '200px', margin: 'auto', display: 'block' }}
 );
 
 and it works fine now...not sure why I had to do that at all, but whatever.
+
+Now lets work on a Search form 
+
+117. In the Users folder, lets create a new component, Search.js, and use rce for a class based component 
+
+118. So in the return, lets make our HTML markup, a from element with a classname of form.
+  and two input values within it. 
+
+  the code should look like this
+
+    <form className='form'>
+                    <input type='text' name='text' placeholder='Search Users...'/>
+                    <input
+                        type='submit'
+                        value='Search'
+                        className='btn btn-dark btn-block'
+                    />
+                </form>
+
+119. Now lets import the search component into App.js, and then we'll inset it into the App.js render right above Users
+
+120. Now we have to add State to the Search component 
+  above the render add in 
+
+  state = {
+        text: ''
+    }
+
+121. then add to the first input in the search component value={this.state.text} 
+
+as a result of that, you technically won't be able to type in the search field because it is a controlled component. To type in we need to incorporate a on-change, since it needs to fire off and update the state, since this input is now attached to the State
+
+122. So in the first input, add onChange={this.onChange} below the value we just set. 
+
+123. Then below the state and above the render() we have to define the onchange
+
+  onChange = (e) => {
+        this.setState({ [e.target.name]: e.target.value});
+    }
+
+ - and now we can type in the search field 
+
+so it should look like this
+
+onChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+but since we only have one expression, we can get rid of the curly braces
+
+ onChange = e => this.setState({ [e.target.name]: e.target.value });
+
+ so this will update the component state in the form 
+
+124. Now we want to add an onSubmit, so in the form element, add it
+
+ <form onSubmit={this.onSubmit} className='form'>
+
+125. And now we'll define it above the onChange(). Little note, it we don't use an arrow function, it becomes more complicated to define the state.
+
+ onSubmit = (e) => {
+    e.preventDefault();
+    console.log(this.state.text);
+  };
+
+
+
