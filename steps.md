@@ -1071,4 +1071,66 @@ render() {
   }
 }
 
-- Now lets work on setting up some alerts. 
+142.  Now lets work on setting up some alerts. Lets start out in Search.js and go to the onSubmit, and underneath the preventDefault and add
+
+if this.state.text is equal to an empty string, we're gonna want to set an alert. So this.props with setAlert() that will take in two things, it takes in the text saying "Please enter something" and the type (danger for red, etc), add an else and move the rest of the code in the onsubmit up into the else. 
+
+it should look like this. 
+
+onSubmit = (e) => {
+    e.preventDefault();
+    if(this.state.text === '') {
+      this.props.setAlert('Please enter something', 'light');
+    } else {
+      this.props.searchUsers(this.state.text);
+      this.setState({text: ''});
+    }
+  };
+
+
+143. And don't forget to add the propType above 
+
+144. And then in the App.js, we'll add the setAlert under showClear
+
+setAlert={this.setAlert}
+
+145. Add into the App.js state, alert:null 
+
+146. And go under clearUsers function and create the setAlert arrow function 
+
+
+setAlert = (msg, type) => {
+    this.setState({ alert: { msg, type } });
+  };
+
+- now we have to get the alert to actually show, so lets make a new component 
+
+147. In the layout folder, make a Alert.js component , and this will be a functional component so type in racf
+
+148. And in the Alert function, have it take in the alert object with the message and type  
+
+149. In the Alert function, get rid of the div, and instead type in if the alert is not equal to null, then we want to show a div with a className that will be undefined using backticks. 
+
+150. Now, the CSS has defined alert types already done, so what we want to do is....my head hurts trying to explain this, but heres the code
+
+const Alert = ( {alert} ) => {
+    return (
+        alert !== null && (
+            <div className={`alert alert-${alert.type}`}>
+                <i className='fas fa-info-circle' /> {alert.msg}
+            </div>
+        )
+    );
+};
+
+151. So, now lets go back into the App.js and import the alert component 
+
+152. And in the return, we shall place it in the container above search component, and then we want to pass in a prop of whatever the alert is, in the state 
+
+<Alert alert={this.state.alert}/>
+
+153. Now the alert won't go away, so we want to set a timeout so the alert will just dissapear 
+
+154. So in the setAlert arrow function, add a set timeout that will revert the state of the alert back to null, and set it for 5 seconds (5000)
+
+setTimeout(() => this.setState({ alert: null }), 5000 )
