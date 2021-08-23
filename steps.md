@@ -1061,6 +1061,7 @@ and then we can cut out this.state from the code in the return
 render() {
 const { users, loading } = this.state;
 return (
+
 <div className='App'>
 <Navbar />
 <div className='container'>
@@ -1115,6 +1116,7 @@ this.setState({ alert: { msg, type } });
 const Alert = ( {alert} ) => {
 return (
 alert !== null && (
+
 <div className={`alert alert-${alert.type}`}>
 <i className='fas fa-info-circle' /> {alert.msg}
 </div>
@@ -1199,3 +1201,112 @@ Under Alert, we will make a Switch, and in that Switch we will make a route, and
 - now we do not want to use a <a> tag to make these links. they will work, but they won't do the save the current user search. So we will use Link instead.
 
 168. In Navbar.js, import { Link } from react-router-dom
+
+169. And in the return state, add this
+
+      <ul>
+        <li>
+          <Link to ='/'>Home</Link>
+        </li>
+        <li>
+          <Link to='/about'>About</Link>
+        </li>
+      </ul>
+
+170. Now if we search, and go to the about page, and then return to home, it still saves the search we just did. The save is still intact, and unlike a <a href> it doesn't do a full refresh
+
+- Now right now, if if search and hit 'more' it will take us to their github. We want to change that by adding a single user page that will populate with data from github, but it won't be github
+
+171. So before we make the user componet, we will make the function to get the request.
+
+172. So in App.js, lets go to below the Search users function, and so lets create a function/class to get a single github user.
+
+getUser = async (username) => {
+
+}
+
+173. for now, lets copy all the code in the search users function and copy and paste that into this one.
+
+174. most of the code will be the same, but we will change the endpoint of what we want.
+
+https://api.github.com/users/${username}?&client_id=
+
+175. We also have to add a piece of state called User and make it an empty object
+
+class App extends Component {
+state = {
+users: [],
+user: {},
+loading: false,
+alert: null,
+};
+
+176. Then in the getUser function, we will change the state to
+
+this.setState({ user: res.data, loading: false });
+
+177. Save and then lets make a new component in the users folder called User.js. And this will be a class based component, so lets make it with rce. This component won't have state, but it will use a lifecycle method
+
+178. So for now, lets just type in Users in the Div, and jump over to App.js and import the User.js component
+
+import User from './components/users/User';
+
+179. Now we need to create a route, but we can't do the same thing we did with the About Component since we need to pass stuff into this component
+     like we need to pass in the getUsers prop we created and also the usersState
+
+180. So in the render, under the about path, we will add
+
+
+    <Route exact path='/user/login' render={props => (
+                <User { ...props } getUser={this.getUser} user={user} loading={loading} />
+
+- and in the top of the render, we need to define user in the state
+
+render() {
+const { users, user, loading } = this.state;
+
+181. Now back in UserItem.js, lets make a link that would be to the individual user page
+
+right now, we have a <a href > going right to the users profile, and thats not what we want.
+
+181. So in the UserItems.js, we will import Link from the react router dom
+
+182. And the UserItem.js, lets get rid of the ahref, and instead make a Link tag
+
+ <Link to={`/user/${login}`} className='btn btn-dark btn-sm my-1'>
+          More
+</Link>
+
+183. Save and now when we hit more on a profile, it will bring us to the single user page.
+
+184. In the User.js component, above the render, add a componentDidMount() {} so it fires off right away, and we'll pass in a prop that leads to the login
+
+export class User extends Component {
+componentDidMount() {
+this.props.getUser(this.props.match.params.login);
+}
+
+185. Now lets update the actual User.js compoent page. All these itmems are things we can get from the endpoint.
+
+render() {
+
+    const {
+        name,
+        avatar_url,
+        location,
+        bio,
+        blog,
+        login,
+        html_url,
+        followers,
+        following,
+        public_repos,
+        public_gists,
+        hireable
+
+    } = this.props.user
+
+    return <div>Users</div>;
+
+}
+}
