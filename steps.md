@@ -728,6 +728,7 @@ the code should look like this
 
 const Users = ({ users, loading }) => {
 return (
+
 <div style={userStyle}>
 {users.map((user) => (
 <UserItem key={user.id} user={user} />
@@ -745,6 +746,7 @@ if (loading) {
 return <Spinner />;
 } else {
 return (
+
 <div style={userStyle}>
 {users.map((user) => (
 <UserItem key={user.id} user={user} />
@@ -834,14 +836,14 @@ style={{ width: '200px', margin: 'auto', display: 'block' }}
 
 and it works fine now...not sure why I had to do that at all, but whatever.
 
-Now lets work on a Search form 
+Now lets work on a Search form
 
-117. In the Users folder, lets create a new component, Search.js, and use rce for a class based component 
+117. In the Users folder, lets create a new component, Search.js, and use rce for a class based component
 
 118. So in the return, lets make our HTML markup, a from element with a classname of form.
-  and two input values within it. 
+     and two input values within it.
 
-  the code should look like this
+the code should look like this
 
     <form className='form'>
                     <input type='text' name='text' placeholder='Search Users...'/>
@@ -854,38 +856,38 @@ Now lets work on a Search form
 
 119. Now lets import the search component into App.js, and then we'll inset it into the App.js render right above Users
 
-120. Now we have to add State to the Search component 
-  above the render add in 
+120. Now we have to add State to the Search component
+     above the render add in
 
-  state = {
-        text: ''
-    }
+state = {
+text: ''
+}
 
-121. then add to the first input in the search component value={this.state.text} 
+121. then add to the first input in the search component value={this.state.text}
 
 as a result of that, you technically won't be able to type in the search field because it is a controlled component. To type in we need to incorporate a on-change, since it needs to fire off and update the state, since this input is now attached to the State
 
-122. So in the first input, add onChange={this.onChange} below the value we just set. 
+122. So in the first input, add onChange={this.onChange} below the value we just set.
 
 123. Then below the state and above the render() we have to define the onchange
 
-  onChange = (e) => {
-        this.setState({ [e.target.name]: e.target.value});
-    }
+onChange = (e) => {
+this.setState({ [e.target.name]: e.target.value});
+}
 
- - and now we can type in the search field 
+- and now we can type in the search field
 
 so it should look like this
 
 onChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
+this.setState({ [e.target.name]: e.target.value });
+};
 
 but since we only have one expression, we can get rid of the curly braces
 
- onChange = e => this.setState({ [e.target.name]: e.target.value });
+onChange = e => this.setState({ [e.target.name]: e.target.value });
 
- so this will update the component state in the form 
+so this will update the component state in the form
 
 124. Now we want to add an onSubmit, so in the form element, add it
 
@@ -893,70 +895,72 @@ but since we only have one expression, we can get rid of the curly braces
 
 125. And now we'll define it above the onChange(). Little note, it we don't use an arrow function, it becomes more complicated to define the state.
 
- onSubmit = (e) => {
-    e.preventDefault();
-    console.log(this.state.text);
-  };
+onSubmit = (e) => {
+e.preventDefault();
+console.log(this.state.text);
+};
 
-- so now we want to be able to search for users based upon what we enter in our search form. With the github API we can make a request to the end point of GET /search/users, and then we can add a parameter of Q which is a query string we want to search for. 
+- so now we want to be able to search for users based upon what we enter in our search form. With the github API we can make a request to the end point of GET /search/users, and then we can add a parameter of Q which is a query string we want to search for.
 
-- Now we want this to be in the main app component, 
+- Now we want this to be in the main app component,
 
 - So the (this.state.text) value in the Search.js component, we have to pass that up to the main app component thru Props
 
-126. So lets rewrite that onSubmit in the Search.js component 
+126. So lets rewrite that onSubmit in the Search.js component
 
-  onSubmit = (e) => {
-    e.preventDefault();
-    console.log(this.state.text);
-  };
+onSubmit = (e) => {
+e.preventDefault();
+console.log(this.state.text);
+};
 
-  we will rewrite it as 
+we will rewrite it as
 
-   onSubmit = (e) => {
-    e.preventDefault();
-    this.props.searchUsers(this.state.text);
-  };
+onSubmit = (e) => {
+e.preventDefault();
+this.props.searchUsers(this.state.text);
+};
 
-  and then we also want to add into it this.setState(); to clear the form by setting the local component text to nothing
+and then we also want to add into it this.setState(); to clear the form by setting the local component text to nothing
 
     onSubmit = (e) => {
     e.preventDefault();
     this.props.searchUsers(this.state.text);
     this.setState({text: ''});
-  };
 
-  - however the props.searchUsers doesn't actually exist at this point, but since we are calling it as props.searchUsers, we can call it as a prop in the App.js where we inputed the search component. 
+};
 
-  so instead of sending a prop down, we are sending a prop up
+- however the props.searchUsers doesn't actually exist at this point, but since we are calling it as props.searchUsers, we can call it as a prop in the App.js where we inputed the search component.
 
-  127. So open up the App.js and lets make some changes. So we are going to give Search the prop of searchUsers and then set it to a method of the this component, this.searchUsers
+so instead of sending a prop down, we are sending a prop up
+
+127. So open up the App.js and lets make some changes. So we are going to give Search the prop of searchUsers and then set it to a method of the this component, this.searchUsers
 
 <Search />
 
-- becomes 
+- becomes
 
 <Search searchUsers={this.searchUsers} />
 
-128. And now we have to create the searchUsers function above the render, and this searchUsers function should take in text since we passed in (this.state.text) on the onsubmit 
+128. And now we have to create the searchUsers function above the render, and this searchUsers function should take in text since we passed in (this.state.text) on the onsubmit
 
 searchUsers = (text) => {
-    
-  }
 
-  and lets add a console log to make sure it works
+}
 
-  and it does!
+and lets add a console log to make sure it works
 
-  So to reiterate, once we submit this form in the Search.js Component, its calling onsubmit, and we're calling a function in the props called searchUsers and passing in the text. 
+and it does!
 
-  In our App.js, we set the props to call this.searchUsers in the app.js
+So to reiterate, once we submit this form in the Search.js Component, its calling onsubmit, and we're calling a function in the props called searchUsers and passing in the text.
 
-  Now we want to make a call to that endpoint SEARCH/Users, so we will use Async/Await
+In our App.js, we set the props to call this.searchUsers in the app.js
 
-  129. So lets add Async to the searchUsers arrow function in the app.js
+Now we want to make a call to that endpoint SEARCH/Users, so we will use Async/Await
 
-  130. And copy our get request from above and paste in inside the searchUsers component. Now the endpoint with this one will be different so we have to change that. 
+129. So lets add Async to the searchUsers arrow function in the app.js
+
+130. And copy our get request from above and paste in inside the searchUsers component. Now the endpoint with this one will be different so we have to change that.
+
 
     searchUsers = async text => {
     const res = await axios.get(
@@ -964,67 +968,65 @@ searchUsers = (text) => {
     );
 
     this.setState({ users: res.data, loading: false });
-  }
 
-131. We have to make one more change, this endpoint won't return res.data  it returns res.data.items
+}
 
- this.setState({ users: res.data.items, loading: false });
+131. We have to make one more change, this endpoint won't return res.data it returns res.data.items
 
- - So now that we're doing this, there is no reason to fetch the original users. So comment that code out (don't delete it yet)
+this.setState({ users: res.data.items, loading: false });
 
- So save and refresh your page and the pade still works, but those default users are gone. 
+- So now that we're doing this, there is no reason to fetch the original users. So comment that code out (don't delete it yet)
 
- Now it will only display what is search, so search for any name and it will work
+So save and refresh your page and the pade still works, but those default users are gone.
 
-131. One final part, add loading to true in the searchUsers function 
+Now it will only display what is search, so search for any name and it will work
 
-this.setState({ loading: true }); 
+131. One final part, add loading to true in the searchUsers function
 
-- this will give us the spinner 
- 
-132. We should also add searchUsers as a proptype in the Search.js component 
+this.setState({ loading: true });
+
+- this will give us the spinner
+
+132. We should also add searchUsers as a proptype in the Search.js component
 
 import PropTypes from 'prop-types';
 
-and in the Search component itself, add in this below the state. 
+and in the Search component itself, add in this below the state.
 
- static propTypes = {
-    searchUsers: PropTypes.func.isRequired
-  };
+static propTypes = {
+searchUsers: PropTypes.func.isRequired
+};
 
-
-- So now the app itself works, but we have a few things we need to do still, like adding a clear button 
+- So now the app itself works, but we have a few things we need to do still, like adding a clear button
 
 133. So in Search.js, lets go underneath the form and add a button and give it a few classnames, set it to say Clear, and add an onClick to call a prop method we're gonna call clear users
-
 
 <button className="btn btn-light btn-block" onClick={this.props.clearUsers}>Clear</button>
 
 134. Now since its a prop lets add it to our prop types above
 
- static propTypes = {
-    searchUsers: PropTypes.func.isRequired,
-    clearUsers: PropTypes.func.isRequired
-  };
+static propTypes = {
+searchUsers: PropTypes.func.isRequired,
+clearUsers: PropTypes.func.isRequired
+};
 
-- now remember, when we're calling {this.props.clearUsers}, we're sending it up, so we have to catch it on our App.js where we have the SearchComponent imbedded. 
+- now remember, when we're calling {this.props.clearUsers}, we're sending it up, so we have to catch it on our App.js where we have the SearchComponent imbedded.
 
-135. So in the App.js, we need to add this to the search component 
+135. So in the App.js, we need to add this to the search component
 
 <Search searchUsers={this.searchUsers} clearUsers={this.clearUsers}/>
 
-136. And then we need to add the clearUsers function to clear out the state. So we do an arrow function that sets the state to users as an empty array, and loading to false. 
+136. And then we need to add the clearUsers function to clear out the state. So we do an arrow function that sets the state to users as an empty array, and loading to false.
 
-- save and refresh and it should work, however we only want the clear button to show if we have a search already. 
+- save and refresh and it should work, however we only want the clear button to show if we have a search already.
 
 - there are a few ways we can do this, but we'll do so as a prop
 
-137. So in App.js, where we placed the Search Component, we'll add in showClear and set it to an expression 
+137. So in App.js, where we placed the Search Component, we'll add in showClear and set it to an expression
 
-so if this.state.users.length is greater then 0, lets pass in true for this prop. else, lets pass in false. 
+so if this.state.users.length is greater then 0, lets pass in true for this prop. else, lets pass in false.
 
-  <Search searchUsers={this.searchUsers} clearUsers={this.clearUsers} showClear={this.state.users.length > 0 ? true: false }/>
-
+<Search searchUsers={this.searchUsers} clearUsers={this.clearUsers} showClear={this.state.users.length > 0 ? true: false }/>
 
 138. so now we're passing in showClear as a prop, so we also want to define it up in proptypes in the Search.js component (note, it is a boolean)
 
@@ -1032,105 +1034,168 @@ showClear: PropTypes.bool.isRequired
 
 139. And then we want to wrap our button in an expression that says it this.props.showClear is true, then we want to show the button
 
-  {this.props.showClear && (
-        <button className="btn btn-light btn-block" onClick={this.props.clearUsers}>Clear</button>
-        )}
+{this.props.showClear && (
+<button className="btn btn-light btn-block" onClick={this.props.clearUsers}>Clear</button>
+)}
 
-- so it all works fine, but we're going to destructure some more of the code 
+- so it all works fine, but we're going to destructure some more of the code
 
-140. So lets add this below the render() but above the return in the Search.js Component 
+140. So lets add this below the render() but above the return in the Search.js Component
 
-const { showClear, clearUsers } = this.props; 
+const { showClear, clearUsers } = this.props;
 
 with that we can remove the this.props from showClear and clearUsers
 
 {showClear && (
-        <button className="btn btn-light btn-block" onClick={clearUsers}>Clear</button>
-        )}
+<button className="btn btn-light btn-block" onClick={clearUsers}>Clear</button>
+)}
 
 - and now we cna do a little more destructuring in app.js becasue we call this.state quite a few times
-
 
 141. In App.js, below render and above return, put this
 
 const { users, loading } = this.state;
 
-and then we can cut out this.state from the code in the return 
+and then we can cut out this.state from the code in the return
 
 render() {
-    const { users, loading } = this.state;
-    return (
-      <div className='App'>
-        <Navbar />
-        <div className='container'>
-          <Search searchUsers={this.searchUsers} clearUsers={this.clearUsers} showClear={users.length > 0 ? true: false }/>
-          <Users loading={loading} users={users} />
-        </div>
-      </div>
-    );
-  }
+const { users, loading } = this.state;
+return (
+<div className='App'>
+<Navbar />
+<div className='container'>
+<Search searchUsers={this.searchUsers} clearUsers={this.clearUsers} showClear={users.length > 0 ? true: false }/>
+<Users loading={loading} users={users} />
+</div>
+</div>
+);
+}
 }
 
 142.  Now lets work on setting up some alerts. Lets start out in Search.js and go to the onSubmit, and underneath the preventDefault and add
 
-if this.state.text is equal to an empty string, we're gonna want to set an alert. So this.props with setAlert() that will take in two things, it takes in the text saying "Please enter something" and the type (danger for red, etc), add an else and move the rest of the code in the onsubmit up into the else. 
+if this.state.text is equal to an empty string, we're gonna want to set an alert. So this.props with setAlert() that will take in two things, it takes in the text saying "Please enter something" and the type (danger for red, etc), add an else and move the rest of the code in the onsubmit up into the else.
 
-it should look like this. 
+it should look like this.
 
 onSubmit = (e) => {
-    e.preventDefault();
-    if(this.state.text === '') {
-      this.props.setAlert('Please enter something', 'light');
-    } else {
-      this.props.searchUsers(this.state.text);
-      this.setState({text: ''});
-    }
-  };
+e.preventDefault();
+if(this.state.text === '') {
+this.props.setAlert('Please enter something', 'light');
+} else {
+this.props.searchUsers(this.state.text);
+this.setState({text: ''});
+}
+};
 
-
-143. And don't forget to add the propType above 
+143. And don't forget to add the propType above
 
 144. And then in the App.js, we'll add the setAlert under showClear
 
 setAlert={this.setAlert}
 
-145. Add into the App.js state, alert:null 
+145. Add into the App.js state, alert:null
 
-146. And go under clearUsers function and create the setAlert arrow function 
-
+146. And go under clearUsers function and create the setAlert arrow function
 
 setAlert = (msg, type) => {
-    this.setState({ alert: { msg, type } });
-  };
+this.setState({ alert: { msg, type } });
+};
 
-- now we have to get the alert to actually show, so lets make a new component 
+- now we have to get the alert to actually show, so lets make a new component
 
 147. In the layout folder, make a Alert.js component , and this will be a functional component so type in racf
 
-148. And in the Alert function, have it take in the alert object with the message and type  
+148. And in the Alert function, have it take in the alert object with the message and type
 
-149. In the Alert function, get rid of the div, and instead type in if the alert is not equal to null, then we want to show a div with a className that will be undefined using backticks. 
+149. In the Alert function, get rid of the div, and instead type in if the alert is not equal to null, then we want to show a div with a className that will be undefined using backticks.
 
 150. Now, the CSS has defined alert types already done, so what we want to do is....my head hurts trying to explain this, but heres the code
 
 const Alert = ( {alert} ) => {
-    return (
-        alert !== null && (
-            <div className={`alert alert-${alert.type}`}>
-                <i className='fas fa-info-circle' /> {alert.msg}
-            </div>
-        )
-    );
+return (
+alert !== null && (
+<div className={`alert alert-${alert.type}`}>
+<i className='fas fa-info-circle' /> {alert.msg}
+</div>
+)
+);
 };
 
-151. So, now lets go back into the App.js and import the alert component 
+151. So, now lets go back into the App.js and import the alert component
 
-152. And in the return, we shall place it in the container above search component, and then we want to pass in a prop of whatever the alert is, in the state 
+152. And in the return, we shall place it in the container above search component, and then we want to pass in a prop of whatever the alert is, in the state
 
 <Alert alert={this.state.alert}/>
 
-153. Now the alert won't go away, so we want to set a timeout so the alert will just dissapear 
+153. Now the alert won't go away, so we want to set a timeout so the alert will just dissapear
 
 154. So in the setAlert arrow function, add a set timeout that will revert the state of the alert back to null, and set it for 5 seconds (5000)
 
 setTimeout(() => this.setState({ alert: null }), 5000 )
+
+-- Now Lets work on the React Router --
+
+155. So now lets install npm react-router-dom, after its installed, we have to import it in our app.js files
+
+156. So in App.js,
+
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
+157. No to use the router we have to go down into our main return app. and we have to wrap everything in the Router
+
+it should look like this
+
+render() {
+const { users, loading } = this.state;
+
+    return (
+      <Router>
+      <div className='App'>
+        <Navbar />
+        <div className='container'>
+          <Alert alert={this.state.alert}/>
+          <Search
+            searchUsers={this.searchUsers}
+            clearUsers={this.clearUsers}
+            showClear={users.length > 0 ? true: false }
+            setAlert={this.setAlert}
+          />
+          <Users loading={loading} users={users} />
+        </div>
+      </div>
+      </Router>
+    );
+
+}
+}
+
+158. So what we have on the page now, that will be our home route. To do this
+
+Under Alert, we will make a Switch, and in that Switch we will make a route, and then within the route, make a fragment, and then next the Search and Users components inside the Fragment
+
+- Also make sure Fragment is imported under React, it should be imported in alongside Component.
+
+159. Let do another Route, but to an About Component. So in the components folder, lets make a new folder called 'pages' and in that folder make a file called About.js
+
+160. This About component will not have any state, so we will make it a functional component, so use racf
+
+161. Inside the Div lets make a h1 and a few p's detailing the project
+
+162. Import Fragment at the top, and change the div to a Fragment
+
+163. Now lets create a route that will go to that component
+
+164. So lets import the About.js Component into our App.js
+
+165. And to create the route, lets go under our previosu route and add in
+
+<Route exact path='/about' />
+
+166. then save, and to confirm this indeed works, add /about to the rendered webpage
+
+167. Now lets add a link in our navbar to that about page, so go into the Navbar component
+
+- now we do not want to use a <a> tag to make these links. they will work, but they won't do the save the current user search. So we will use Link instead.
+
+168. In Navbar.js, import { Link } from react-router-dom
