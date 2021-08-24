@@ -1310,3 +1310,258 @@ render() {
 
 }
 }
+
+186. now lets create the UI for the single user component, so in the User.js Compent, we will bring in/import the spinner component, so in case the User hasn't been fetched yet, it will give us the spinner component at least
+
+187. Now lets bring in the proptypes as well, import and place this above the render
+
+static propTypes = {
+loading: PropTypes.bool,
+user: PropTypes.object.isRequired,
+getUser: PropTypes.func.isRequired
+}
+
+188. Then under the const { loading } = this.props , add this below it
+
+if(loading) return <Spinner />
+
+- this essentially says if the page is still loading, show the spinnner
+
+189. Now we're going to use a Fragment, so import it at the top along with { Component } and then change the return <div> into a Fragment and get rid of the {name} for now
+
+190. Now we want to add a back button, so lets import Link as well (From React Router Dom)
+
+191. We'll but a link in the fragment going to the homepage (which is '/' and we'll add a few of the premade classnames to it, and have it say, 'back to search'
+
+return <Fragment>
+
+<Link to='/' className='btn btn-light'>
+Back to Search
+</Link>
+</Fragment>;
+
+192. Now we want to add a checkmark if the user is hireable. Hireable is one of the endpoints that returns from the API (first time I'm hearing of that), but the purpose of this project, we want a check if they are hireable and a x mark if they are not hireable.
+
+193. So we're going to put this below the <Link> inside the <Fragment>
+
+it passes in the hireable status into the empty string based on a conditional
+
+Hireable:{' '}
+{hireable ? (
+<i className='fas fa-check text-success' />
+) : (
+<i className='fas fa-times-circle text-danger' />
+)}
+
+194. Next, we're going to display the user profile image, so add this below hireable. Also we'll add the name and location, we also want to add the bio, and the link to the actual github page, we also want to make an unordered list that displays some of the optional data from the endpoint
+
+return (
+<Fragment>
+<Link to='/' className='btn btn-light'>
+Back to Search
+</Link>
+Hireable:{' '}
+{hireable ? (
+<i className='fas fa-check text-success' />
+) : (
+<i className='fas fa-times-circle text-danger' />
+)}
+<div className='card grid-2'>
+<div className='all-center'>
+<img
+src={avatar_url}
+className='round-img'
+alt=''
+style={{ width: '150px' }}
+/>
+<h1>{name}</h1>
+<p>Location: {location}</p>
+</div>
+<div>
+{bio && (
+<Fragment>
+<h3>Bio</h3>
+<p>{bio}</p>
+</Fragment>
+)}
+<a href={html_url} className='btn btn-dark my-1'>
+Vist Github Profile
+</a>
+<ul>
+<li>
+{login && (
+<Fragment>
+<strong>Username: </strong> {login}
+</Fragment>
+)}
+</li>
+<li>
+{company && (
+<Fragment>
+<strong>Company: </strong> {company}
+</Fragment>
+)}
+</li>
+<li>
+{blog && (
+<Fragment>
+<strong>Website: </strong> {blog}
+</Fragment>
+)}
+</li>
+</ul>
+</div>
+</div>
+</Fragment>
+);
+
+195. Now under the last div, we're gonna add more data, these are badges that display followers, number of repos, etc. its also a seperate card from the above data which is in its own card.
+
+      <div className='card text-center'>
+        <div className='badge badge-primary'>Followers: {followers}</div>
+        <div className='badge badge-success'>Following: {following}</div>
+        <div className='badge badge-danger'>Public Repos: {public_repos}</div>
+        <div className='badge badge-dark'>Public Gists: {public_gists}</div>
+      </div>
+
+196. We also want to add the Github Repos, but thats technically a different endpoint (different API call), so lets jump back to the App.js, and under get user, we're going to define a get users repo function. For this purpose, however, just copy and past the code from the get user function and we'll refactor as needed.
+
+// Get Users Repos
+
+getUserRepos = async (username) => {
+this.setState({ loading: true });
+const res = await axios.get(
+`https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+);
+
+    this.setState({ repos: res.data, loading: false });
+
+};
+
+197. We also need to add Repos to the state and add it as an empty array
+
+class App extends Component {
+state = {
+users: [],
+user: {},
+repos: [],
+loading: false,
+alert: null,
+};
+
+198. So we have the method, now we have to call it in our user components
+
+<User
+{...props}
+getUser={this.getUser}
+getUserRepos={this.getUserRepos}
+user={user}
+loading={loading}
+/>
+
+199. Now up in the main render component, where we destructred users, user, etc...add repos to that
+
+render() {
+const { users, user, repos, loading } = this.state;
+
+200. And into that same User component, we have to add the repo state
+
+<User
+{...props}
+getUser={this.getUser}
+getUserRepos={this.getUserRepos}
+user={user}
+repos={repos}
+loading={loading}
+/>
+
+201. Now lets just back to the User.js component and we're gonna pass in the props/getUserRepos up under the component did mount and then add it into the prop types
+
+export class User extends Component {
+componentDidMount() {
+this.props.getUser(this.props.match.params.login);
+this.props.getUserRepos(this.props.match.params.login);
+}
+
+static propTypes = {
+loading: PropTypes.bool,
+user: PropTypes.object.isRequired,
+getUser: PropTypes.func.isRequired,
+getUserRepos: PropTypes.func.isRequired,
+};
+
+202. Now in the components folder, lets create another folder for Repos as well, and in that folder, we'll add a Repos.js file and we will also have a file called RepoItem.js
+
+203. Now the Repos.js component will be a simple, it will just be a list of the repos that are passed in. Repos will be a functional component so type in racf and pass in the props, but destructure the repos and get rid of the div inside the return. instead we shall return repos.map which will loop through them, and set for each one (called repo) to display a repoItem component where we pass in the individual repo. And it will need a key, because its a list, so for Key we'll use the Repo id. And Repos is a prop, so we'll need to define prop type for it. So import Prop types and declare it. And lastly im[ort RepoItem as well
+
+import React from 'react'
+import PropTypes from 'prop-types';
+import RepoItem from './RepoItem';
+
+const Repos = ( {repos } ) => {
+return repos.map(repo => <RepoItem repo={repo} key={repo.id}/>)
+}
+
+Repos.PropTypes = {
+repos: PropTypes.array.isRequired,
+}
+
+export default Repos
+
+204. Now lets go into Repoitem.js and make it a functional component with racf, and then we'll pass in and destructure a single repo into it.
+
+205. Don't forget to import and declare the proptypes
+
+import React from 'react';
+import PropTypes from 'prop-types';
+
+const RepoItem = ({ repo }) => {
+return (
+<div classname='card'>
+<h3>
+<a href={repo.html_url}>{repo.name}</a>
+</h3>
+</div>
+)
+}
+
+RepoItem.propTypes = {
+repo: PropTypes.object.isRequired
+}
+
+export default RepoItem;
+
+206. Now we have to bring this into our User.js component, so in the User.js, import
+     import { Repos } from '../repos/Repos';
+
+207. Earlier we forgot to add repos to the state propTypes, so lets do that now.
+
+static propTypes = {
+loading: PropTypes.bool,
+user: PropTypes.object.isRequired,
+repos: PropTypes.array.isRequired,
+getUser: PropTypes.func.isRequired,
+getUserRepos: PropTypes.func.isRequired,
+};
+
+208. Now lets go right above where the Fragment ends, and below the badges, we will add in the Repos component and pass into the repos. We also need to pass in repos to the props along with loading
+
+const { loading, repos } = this.props;
+
+and make sure its not {} in the import, it should look like this
+
+import Repos from '../repos/Repos';
+
+and then we add in the Repos component at the end of the Fragment
+<div className='card text-center'>
+<div className='badge badge-primary'>Followers: {followers}</div>
+<div className='badge badge-success'>Following: {following}</div>
+<div className='badge badge-light'>Public Repos: {public_repos}</div>
+<div className='badge badge-dark'>Public Gists: {public_gists}</div>
+</div>
+<Repos repos={repos} />
+</Fragment>
+
+209. Now the App is finished and fully works.
+
+However we will now refactor everything into functional components, use hooks, and the contact api.
