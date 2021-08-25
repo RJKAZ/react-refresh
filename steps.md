@@ -159,6 +159,9 @@ Now we begin creating the navbar component
     <Navbar title="Github Finder" />
 17. Now to use the prop, we have to inset it using curley brackets. So in that h1 tag right after the icon tag, add {this.props.title}
 18. We shall also use a prop for the Icon, in pretty much the same way we did title
+
+-- left off here
+
 19. So in App JS, add to the Navbar component icon='fab fa-github'
 20. And then in the Navbar component {this.props.icon}
 21. But if you don't pass the props in you get nothing, so there is a way to define default static props

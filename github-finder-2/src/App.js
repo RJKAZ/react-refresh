@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { Component} from 'react';
+import Navbar from './components/layout/Navbar';
 import './App.css';
 
-function App() {
-  return (
-    <h1>Time to Shine!</h1>
-  );
+class App extends Component {
+  render(){
+    return (
+      <Navbar title="Github Finder"/>
+    );
+  }
+
 }
 
 export default App;
