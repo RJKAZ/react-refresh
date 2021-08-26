@@ -3,6 +3,7 @@ import shoe1 from './images/shoe1.jpeg';
 import shoe2 from './images/shoe2.jpeg';
 import shoe3 from './images/shoe3.jpeg';
 import shoe4 from './images/shoe4.jpeg';
+import shoeData from './data/shoes.json';
 
 
 function Shoes() {
@@ -15,6 +16,9 @@ function Shoes() {
         <div className="products">
             <h1>Shoe 1</h1>
             <img src={shoe1} alt="shoe1"></img>
+            {shoeData.map((shoeDetail, index)=>{
+                return <h1>{shoeDetail.title}</h1>
+            })}
             <h1>Shoe 2</h1>
             <img src={shoe2} alt="shoe2"></img>
             <h1>Shoe 3</h1>

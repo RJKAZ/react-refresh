@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "title": "Black Boot",
+        "type": "Boot",
+        "color": "Black",
+        "size": 10
+    },
+    {
+        "id": 2,
+        "title": "Pink Sneaker",
+        "type": "Sneaker",
+        "color": "Pink",
+        "size": 5
+    },
+    {
+        "id": 3,
+        "title": "High Heels",
+        "type": "Heels",
+        "color": "Sewn Red and Grey",
+        "size": 8
+    },
+    {
+        "id": 4,
+        "title": "Green Crocs",
+        "type": "Croc",
+        "color": "Green",
+        "size": 9
+    }
+
+
+]
