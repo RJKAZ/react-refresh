@@ -165,3 +165,21 @@ React terms
 Dispatch()  is the method used to dispatch actiosn and trigger states changes to the store 
 
 Element 
+
+
+hidden abstract functionality
+
+everything starts with package.json
+always be able to switch the node version 
+metrics registry is where we actually download stuff
+https-proxy
+every company has their own registery for metrics/npm
+cache will be stored locally, 
+npm -v = 6.14.10
+npm use v12.14.1 (to switch )
+readme should be updated 
+and for new projects, be sure to read them thoughly 
+
+ways to optomise code/sites - local storage 
+
+no sensative data should be part of local storage 
