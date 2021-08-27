@@ -183,3 +183,25 @@ and for new projects, be sure to read them thoughly
 ways to optomise code/sites - local storage 
 
 no sensative data should be part of local storage 
+
+
+-- Redux Terms 
+
+What is Redux? is a pattern and library for managing and updating application state using events called "actions"
+
+It serves as a centralized store for state that needs to be used accross your entire application. 
+
+The state is the 'Global' State and redux helps you manage that. 
+
+Redxu however does add complexity, code length, and has more concepts needed to learn. Its a trade off between short and long term productivitiy. 
+
+Redux is more useful when 
+    - you have large amounts of application state that are needed in many places in the app. 
+    - The app state is updated frequently over time
+    - the logic to update that state may be complex. 
+    - the app has a medium or large sized codebase, and might be worked on by many people
+
+So not all Apps need Redux, but for large/complex ones it can help
+
+Redux can integrate with other frameworkds, but works best with React. 
+
