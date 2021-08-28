@@ -203,5 +203,129 @@ Redux is more useful when
 
 So not all Apps need Redux, but for large/complex ones it can help
 
-Redux can integrate with other frameworkds, but works best with React. 
+Redux can integrate with other frameworks, but works best with React. 
+
+So lets look at small react counter component. This tracks a number in the component state, and increments the number when the button is clicked. 
+
+function Counter() {
+  // State: a counter value - the source of truth/data that drive the app. 
+  const [counter, setCounter] = useState(0)
+
+  // Action: code that causes an update to the state when something happens - the events that occur in the app based on user input, and trigger updates in the state. 
+  const increment = () => {
+    setCounter(prevCounter => prevCounter + 1)
+  }
+
+  // View: the UI definition - a declarative description of the UI based on the current state. 
+  return (
+    <div>
+      Value: {counter} <button onClick={increment}>Increment</button>
+    </div>
+  )
+}
+
+this is a one way data flow 
+
+- State describes the condition of the app at a specific point in time
+- the UI is rendered based on that state
+- When something happens, (such as a user clicking a button), the state is updated based on what occured. 
+- the UI rerenders based on the new state 
+
+state is decalred - state gets viewed/displayed - an action changes the state - state gets re-rendered viewed/displayed - rinse and repeat. 
+
+this such example is simple, but the can get very complex when you have multiple compnents that need to share and use the same state/data, esspecially if they are in different parts of the app. 
+
+lifting the state up to parent components can help but doesn't always. 
+
+One way to solve this is extract the shared state from the components and put it into a centralized location outside the component tree. This way any component can access the state or trigger actions no matter where in the app they are. 
+
+This is the basic idea behind Redux.  a single centralized place to contain the global state in your application. 
+
+Now lets understand the concept of Immutability - 
+
+'Mutable' means 'changeable
+'Immutable' means it can never be changed. 
+
+Javascript objects and arrays are all mutable by default. If I create an object or an array, you can change the contents of it. 
+
+this is called mutating the object or array. Its the same object/array, but the contents inside have changed. 
+
+In order to update values immutably, your code must make copies of exisiting objects/arrays then modify the copies. 
+
+This is essentially the Javascript spread opperator does. 
+
+Redux expects that all State updates are done immutably. 
+
+Actions - 
+
+an action is a plain javascript object that has a type field. You can think of an action as an event that describes something that happened in the application. 
+
+the type field should be a string that gives this action a descriptive name, like "todos/todo/Added". We usually write that type string like "domain/eventName", where the first part if the feature or category that this action belong to, and the second part is the specific thing has happened. 
+
+An action object can have other fields with additional information what happened. We put that information in feild called the payload. 
+
+a typical action object might look like this
+
+const addToDoAction = {
+    type: 'todos/todoAdded',
+    payload: 'Buy milk'
+}
+
+Action Creators - An action creator is a function that creates and returns an action object. We typically use these so we don't have to write the action object by hand 
+
+const addTodo = text => {
+    return {
+        type: 'todos/todoAdded',
+        payload: text
+    }
+}
+
+Reducers - 
+
+A reducer is a function that recieves the current state and an action object, decides how to update the state if nessesary, and returns the new state: (state, action) => newState
+
+You can think of a Reducer as an event listener which handles events based on the recieved action (event) type. 
+
+Reducers are named as such becasue they are similar to a callback function you pass to the Array.reduce() method.
+
+Reducers do have rules they must always follow. 
+
+1. they should only calculate the new state value based on the state and action arguments. 
+2. they are not allowed to modify the exisiting state. Instead they must make immutable updates, by copying the exisiting state and making changes to the copied values. 
+3. they must not do any asynchronous logic, calculate random values, or cause other 'side effects'
+
+here is a small example of a reducer 
+
+const initialState = { value: 0 }
+
+function counterReducer(state = initialState, action) {
+  // Check to see if the reducer cares about this action
+  if (action.type === 'counter/increment') {
+    // If so, make a copy of `state`
+    return {
+      ...state,
+      // and update the copy with the new value
+      value: state.value + 1
+    }
+  }
+  // otherwise return the existing state unchanged
+  return state
+}
+
+reducers can use any kind of logic inside to decide what the new state should be: if/else, switch, loops, and so on
+
+Store - the current Redux application state lives in an object called the Store. 
+
+the store is created by passing in a r
+
+
+
+
+
+Redcuers, Stores, and Actions - 
+
+
+react takes an action
+
+very important 
 
