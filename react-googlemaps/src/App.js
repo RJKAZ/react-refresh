@@ -58,7 +58,7 @@ export class MapContainer extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: 'AIzaSyAbzAfRey2evh7gwEr-n8Ox4OFrqabWWxk',
+  apiKey: '',
 })(MapContainer);
 
 // https://www.digitalocean.com/community/tutorials/how-to-integrate-the-google-maps-api-into-react-applications
