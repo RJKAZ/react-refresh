@@ -1,0 +1,145 @@
+React Terms 
+
+1.	What is ReactJS? – 
+
+A free and open source front-end library for building user interfaces or UI components, it is created and maintained by Facebook.
+
+2.	Name some advantages of ReactJS? - 
+
+Resusable Components, the Virtual Dom, and since its been highly adopted, there are no shortage of developer tools and resources.
+
+3.	What is JSX? – 
+
+It is Javascript XML, it’s a syntax extension of JavaScript that allows us to write HTML directly in React/JavaScript code. 
+
+4.	What are the disadvantages of ReactJS? 
+
+Its very high pace of development, since you constantly have to relearn how to use it. Like if you mastered React with Class based components, the shift to Function based components with Hooks would require rethinking and relearning. React itself also only applies to the UI so you need to still invest in other technologies like for a Backend. JSX can also take a little getting used to. 
+
+5.	Difference between create Element and clone Element? – 
+
+Create element will create a new HTML element, where as clone will clone an existing element.
+
+6.	What is the difference between State and Props? 
+
+State is Internal and controlled by the component itself. While props are external and controlled by whatever renders the component. 
+
+7.	What is Redux? – 
+
+It’s a Library for managing application state. Redux maintains the state of an entire application in a single immutable state tree outside of the parent/child relations so any component can directly receive the state
+
+8.	What is the difference between React and React Native? – 
+
+React Native is more designed for building cross platform mobile apps like on Android or IOS
+
+9.	How is React different from Angular? 
+
+Angular is based on typescript and MVC(Model View Controller) where as React is based on JavaScript and the Virtual Dom 
+
+10.	Why can’t browsers read JSX? 
+
+Browsers can only read JavaScript objects and JSX is not a regular Javascript object. 
+
+11.	What do you understand by “Single” Source of truth? – 
+
+Its ultimately wanting to make your components controllable. Input fields for example are by default not controllable meaning they render data from the DOM, and not the state. 
+
+12.	What is React Router? – 
+
+It’s a library for touting in react, allowing you to navigate among the views of various components. 
+
+13.	Why is Switch keyword used in React Router V4
+
+14.	Why do we need a Router in React? – 
+
+Not all react apps need it, but its very helpful. It allows you to navigate different components of a page without refreshing the pages. Like if you have a search component, and navigate to an about page, typically the search would be gone, but with routing, you can navigate around the app and the search you made would retain. 
+
+15.	What is render() in React? – 
+
+The purpose of render is to display the specified HTML code inside the specified HTML element. 
+
+
+
+
+
+
+
+16.	What is Flux in Javascript – 
+
+It’s a pattern for managing data flow in react. The passing of data down from Parent to child is what flux detmines as the default method for handling data.
+
+17.	What are refs in React? 
+
+Refs provide a way to access DOM Nodes or React Elements in the render method. 
+
+18.	Difference between Dom and virtual DOM in React
+
+19.	What are Controlled Components – 
+
+A controlled component is on that takes it current value thru props and notifies changes through a callback like onChange. 
+
+20.	What are uncontrolled Components? 
+
+stores its state on its own internally and you query the dom using a ref to find its current value when you need it. 
+
+21.	Whats is the difference between an element and a component in react? 
+
+Elements simply make up the components. 
+
+22.	Explain the difference between functional and class components? 
+
+A functional component is  plain javascript function which accepts props as an argument and returns a react element. A class component requires you to extend from React and create a render function. 
+
+23.	What is Props – 
+
+Stands for properties, its like a global variable that we can pass to components.
+
+24.	What is State in React and how is it used? 
+
+State is a store of data 
+
+25.	How can you update the State of a Component? 
+
+To update out state we use setState() and pass in an object
+
+26.	What is the use of the arrow function in React – 
+
+If you use arrow functions within render, each call to render will create new function objects
+
+27.	List some of the cases you should use Refs – 
+
+to find the state/data from uncontrolled components
+
+28.	What are Pure Components
+
+29.	What is the significance of keys in React
+
+30.	Describe how events are handled in React 
+
+31.	Explain the Components of Redux
+
+32.	What is Context
+
+33.	Explain the mixin or higher order components (HOC) in React
+
+34.	What are synthetic events in React
+
+35.	What is Redux Thunk used for
+
+36.	What can you do with HOC?
+
+37.	Where were the major problems of the MVC framework
+
+38.	What you understand by “Single source truth”
+
+39.	How are Actions defined in Redux
+
+40.	Explain the Role of a Reducer
+
+41.	What is the significance of Store in Redux
+
+42.	What are Pure components,
+
+43.	Why is the Switch Keyword used in React Router v4?
+
+44.	How is React Router different from conventional routing 
