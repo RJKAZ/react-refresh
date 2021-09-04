@@ -110,8 +110,6 @@ If you use arrow functions within render, each call to render will create new fu
 
 to find the state/data from uncontrolled components
 
-28.	What are Pure Components
-
 29.	What is the significance of keys in React
 
 30.	Describe how events are handled in React 
@@ -124,22 +122,26 @@ to find the state/data from uncontrolled components
 
 34.	What are synthetic events in React
 
-35.	What is Redux Thunk used for
+35.	What is Redux Thunk used for - It is a middleware that allows you to call the action creators that return a function (thunk) which takes in the stores's dispath method as the argument and which is afterwards used to dispatch the synchronous action after the API or side effects have been finished. 
 
 36.	What can you do with HOC?
 
 37.	Where were the major problems of the MVC framework
 
-38.	What you understand by “Single source truth”
+- A core princepal of the framwork is the view layers ignorance. Views are dumb object. they only know whow to present data, they don't know or understand what they are presenting. 
 
 39.	How are Actions defined in Redux
 
-40.	Explain the Role of a Reducer
+40.	Explain the Role of a Reducer 
 
-41.	What is the significance of Store in Redux
+41.	What is the significance of Store in Redux - Its an immutable object tree. Its essentially a state container which holds the applications state. Redux only has a single store in the application. And when a store is created, you need to specify the reducer. 
 
-42.	What are Pure components,
+42.	What are Pure components? 
+
+they are components which do not re-render when the value of state and props has been updated with the same values. If the value of the previous state or props and the new state or props is the same, the component is not rerendered. 
 
 43.	Why is the Switch Keyword used in React Router v4?
 
 44.	How is React Router different from conventional routing 
+
+React router allows navigation thru the site without refreshing any part of it. 
