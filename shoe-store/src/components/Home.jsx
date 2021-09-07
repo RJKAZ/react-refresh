@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Home() {
+/*function Home() {
     return (
         <div>
             <h1> Welcome to the hottest shoe store on the Planet!</h1>
@@ -8,5 +8,10 @@ function Home() {
         </div>
     )
 }
+*/
+
+const Home = () => <h1> Welcome to the Hottest shoe store on the net!</h1>;
+
+// this is another way of writing it with an arrow function 
 
 export default Home
